@@ -32,8 +32,8 @@ def start_timer():
     scheduler.add_job(
         crawl_job, 
         'interval', 
-        seconds=5,
-        #minutes=5, 
+        #seconds=5,
+        minutes=5, 
         id='taipei_parking_timer', 
         replace_existing=True
     )
