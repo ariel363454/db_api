@@ -27,16 +27,19 @@ def crawl_job():
         print(f"❌ [Timer 失敗] TDX 路邊停車格任務發生崩潰: {str(e)}")
 
 def start_timer():
+    if os.environ.get('RUN_MAIN') != 'true':
+        print("⏳ [Auto-Reloader 偵測] 這是第一行程監控期，攔截計時器，防止重複初始化。")
+        return
+
     scheduler = BackgroundScheduler()
     
     scheduler.add_job(
         crawl_job, 
         'interval', 
-        #seconds=5,
         minutes=5, 
         id='taipei_parking_timer', 
         replace_existing=True
     )
     
     scheduler.start()
-    print("🚀 [資工後端防禦] 背景計時器 Timer 已成功通電，開始倒數計時！")
+    print("🚀 [資工後端防禦完全體] 背景計時器已安全通電，已鎖定單一工作行程！")
