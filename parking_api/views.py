@@ -141,12 +141,15 @@ def get_parking_bounds(request):
         road_params = [bbox_wkt]
         
         if is_radius_mode:
-            # 🚀 同步優化：利用 ST_Centroid 直接抓取幾何中心計算與使用者的距離，大幅減少 CPU 浮點數開銷
+            # 🚀 同步優化：拋棄 ST_Centroid，改用 ST_Buffer 建立 500m 圓形雷達，判定線段是否與圓相交
             road_base_query += """
-                AND ST_Distance(
-                    ST_Centroid(r.geom_line),
-                    ST_GeomFromText(CONCAT('POINT(', %s, ' ', %s, ')'))
-                ) <= 0.0045
+                AND ST_Intersects(
+                    r.geom_line,
+                    ST_Buffer(
+                        ST_GeomFromText(CONCAT('POINT(', %s, ' ', %s, ')')),
+                        0.0045
+                    )
+                )
             """
             road_params.extend([user_lng, user_lat])
             
