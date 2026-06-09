@@ -4,7 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import datetime
+from django.views.decorators.cache import cache_page
 
+
+@cache_page(60 * 3)
 @api_view(['GET'])
 def get_parking_bounds(request):
     min_lat = request.query_params.get('min_lat')
