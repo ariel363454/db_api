@@ -27,19 +27,19 @@ def crawl_job():
         print(f"❌ [Timer 失敗] TDX 路邊停車格任務發生崩潰: {str(e)}")
 
 def start_timer():
-    if os.environ.get('RUN_MAIN') != 'true':
-        print("⏳ [Auto-Reloader 偵測] 這是第一行程監控期，攔截計時器，防止重複初始化。")
-        return
-
     scheduler = BackgroundScheduler()
+    
+    # ⚡ 獲取當下時間，作為開機立刻執行的觸發訊號
+    now = datetime.now()
     
     scheduler.add_job(
         crawl_job, 
         'interval', 
         minutes=5, 
         id='taipei_parking_timer', 
-        replace_existing=True
+        replace_existing=True,
+        next_run_time=now  # 🚀 關鍵核心：強迫 Azure 開機開箱的第一秒，立刻執行一次 crawl_job！
     )
     
     scheduler.start()
-    print("🚀 [資工後端防禦完全體] 背景計時器已安全通電，已鎖定單一工作行程！")
+    print("🚀 [資工後端防禦] 背景計時器 Timer 已成功通電，且已觸發首發冷啟動任務！")
