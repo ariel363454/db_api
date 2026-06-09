@@ -66,6 +66,14 @@ DATABASES = {
                 'ssl_mode': 'REQUIRED'
             }
         }
+        'CONN_MAX_AGE': 60,
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'parking-unique-snowflake', # 給它一個專屬的記憶體代號
     }
 }
 
